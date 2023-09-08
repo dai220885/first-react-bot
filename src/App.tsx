@@ -1,43 +1,72 @@
-import { useState } from 'react';
-import { Route, Router, Text, ButtonGroup, Button, useText, Image } from '@urban-bot/core';
-import fs from 'fs';
-import logo from './assets/logo.png';
+import { useState } from "react";
+import { Route, Router, Text, ButtonGroup, Button, useText, Image, useBotContext } from "@urban-bot/core";
+import fs from "fs";
+import logo from "./assets/logo.png";
 
 const file = fs.readFileSync(logo);
 
 const Echo = () => {
-    const [text, setText] = useState('Say something');
+  const [text, setText] = useState("Say something");
 
-    useText(({ text }) => {
-        setText(text);
-    });
+  useText(({ text }) => {
+    setText(text);
+  });
 
-    return (
-        <Text>
-            <i>{text}</i>
-        </Text>
-    );
-}
+  return (
+    <Text>
+      <i>{text}</i>
+    </Text>
+  );
+};
 
 function Logo() {
-    const [title, setTitle] = useState('Urban Bot');
+  const [title, setTitle] = useState("Urban Bot");
 
-    const addRobot = () => {
-        setTitle(title + '🤖');
-    };
+  const addRobot = () => {
+    setTitle(title + "🤖");
+  };
 
-    return (
-        <Image
-            title={title}
-            file={file}
-            buttons={
-                <ButtonGroup>
-                    <Button onClick={addRobot}>Add robot</Button>
-                    <Button onClick={()=> {setTitle('Urban Bot')}}>Remove all robots</Button>
-                </ButtonGroup>
-            }
-        />
-    );
+  return (
+    <Image
+      title={title}
+      file={file}
+      buttons={
+        <ButtonGroup>
+          <Button onClick={addRobot}>Add robot</Button>
+          <Button onClick={() => {
+            setTitle("Urban Bot");
+          }}>Remove all robots</Button>
+        </ButtonGroup>
+      }
+    />
+  );
+}
+
+function ShowInfo() {
+
+
+  const { chat } = useBotContext();
+//const [from, setFrom] = useState<any>()
+const [name, setName] = useState<any>()
+
+
+  useText(({ from }) => {setName(from.id)});
+  //useText(({ from }) => {setFrom(from)});
+  useText(({ from }) => console.log(`
+  id: ${from.id} 
+  userName: ${from.username} 
+  firstName: ${from.firstName}
+  lastName: ${from.lastName} 
+  isBot: ${from.isBot}`));
+
+  return (
+    <>
+      <Text>Чат id {chat.id}</Text>
+      <Text>от кого: {name}</Text>
+      {/*<Text>от кого {JSON.parse(from)}</Text>*/}
+    </>
+
+  );
 }
 
 type TodoType = {
@@ -59,7 +88,7 @@ export function App() {
       if (todo.id === toggledId) {
         return {
           ...todo,
-          isCompleted: !todo.isCompleted,
+          isCompleted: !todo.isCompleted
         };
       }
       return todo;
@@ -85,26 +114,30 @@ export function App() {
     </Button>
   ));
 
-  if (todos.length === 0) {
-    return <Text>Todo list is empty</Text>;
-  }
+  // if (todos.length === 0) {
+  //   return <Text>Todo list is empty</Text>;
+  // }
 
+  // return (
+  //   <ButtonGroup title={title} maxColumns={3} isNewMessageEveryRender={false}>
+  //     {todosButtons}
+  //   </ButtonGroup>
+  // );
   return (
-    <ButtonGroup title={title} maxColumns={3}>
-      {todosButtons}
-    </ButtonGroup>
+    <>
+      {/*<Text>Welcome to Urban Bot! Type /echo or /logo.</Text>*/}
+      <ShowInfo />
+      <Router>
+        <Route path="/echo">
+          <Echo />
+        </Route>
+        <Route path="/logo">
+          <Logo />
+        </Route>
+        <Route path="/inf">
+          <ShowInfo />
+        </Route>
+      </Router>
+    </>
   );
-    // return (
-    //     <>
-    //         <Text>Welcome to Urban Bot! Type /echo or /logo.</Text>
-    //         {/*<Router>*/}
-    //         {/*    <Route path="/echo">*/}
-    //         {/*        <Echo />*/}
-    //         {/*    </Route>*/}
-    //         {/*    <Route path="/logo">*/}
-    //         {/*        <Logo />*/}
-    //         {/*    </Route>*/}
-    //         {/*</Router>*/}
-    //     </>
-    // );
 }
