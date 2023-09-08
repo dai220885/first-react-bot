@@ -46,24 +46,25 @@ function ShowInfo() {
 
 
   const { chat } = useBotContext();
-//const [from, setFrom] = useState<any>()
+const [from, setFrom] = useState<any>()
 const [name, setName] = useState<any>()
 
 
   useText(({ from }) => {setName(from.id)});
-  //useText(({ from }) => {setFrom(from)});
-  useText(({ from }) => console.log(`
-  id: ${from.id} 
-  userName: ${from.username} 
-  firstName: ${from.firstName}
-  lastName: ${from.lastName} 
-  isBot: ${from.isBot}`));
+  useText(({ from }) => {setFrom(from)});
+  // useText(({ from }) => console.log(`
+  // id: ${from.id}
+  // userName: ${from.username}
+  // firstName: ${from.firstName}
+  // lastName: ${from.lastName}
+  // isBot: ${from.isBot}`));
+  useText(({ from }) => console.log({from}));
 
   return (
     <>
       <Text>Чат id {chat.id}</Text>
-      <Text>от кого: {name}</Text>
-      {/*<Text>от кого {JSON.parse(from)}</Text>*/}
+      {/*<Text>от кого: {name}</Text>*/}
+      <Text>от кого {JSON.stringify(from)}</Text>
     </>
 
   );
