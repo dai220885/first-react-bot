@@ -135,9 +135,9 @@ export function App() {
         <Route path="/logo">
           <Logo />
         </Route>
-        <Route path="/inf">
-          <ShowInfo />
-        </Route>
+        {/*<Route path="/inf">*/}
+        {/*  <ShowInfo />*/}
+        {/*</Route>*/}
       </Router>
     </>
   );
